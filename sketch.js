@@ -53,7 +53,7 @@ function draw(){
   if (estadoDoJogo === PLAY) {
     ground.velocityX = -2;
 
-    // faz o chão não sumir
+    // faz o chï¿½o nï¿½o sumir
     if (ground.x < 0){
       ground.x = 300;
     }
@@ -69,9 +69,11 @@ function draw(){
 
     criarNuvem();
     criarCacto();
-
+    if (grupoCacto.isTouching(trex)) {
+      estadoDoJogo = END; 
+    }
   } else if (estadoDoJogo === END) {
-
+    console.log("MORREU");
   }
 
   drawSprites();
