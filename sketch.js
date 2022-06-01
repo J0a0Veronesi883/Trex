@@ -3,27 +3,30 @@ var trex ,trex_running;
 var ground , groundImage; 
 var invisibleGround;
 var nuvem, nuvemImage;
-var cacto1
-var cacto2
-var cacto3
-var cacto4
-var cacto5
-var cacto6
-var cacto
+var cacto1;
+var cacto2;
+var cacto3;
+var cacto4;
+var cacto5;
+var cacto6;
+var cacto;
+var grupoCacto, grupoNuvem;
+
+const PLAY = 1;
+const END = 0;
+var estadoDoJogo = PLAY;
 
 function preload(){
   trex_running = loadAnimation("trex1.png", "trex3.png", "trex4.png");
-groundImage = loadImage("ground2.png");
-nuvemImage = loadImage ("cloud.png");
-cacto1 = loadImage("obstacle1.png")
-cacto2 = loadImage("obstacle2.png")
-cacto3 = loadImage("obstacle3.png")
-cacto4 = loadImage("obstacle4.png")
-cacto5 = loadImage("obstacle5.png")
-cacto6 = loadImage("obstacle6.png")
-
+  groundImage = loadImage("ground2.png");
+  nuvemImage = loadImage ("cloud.png");
+  cacto1 = loadImage("obstacle1.png")
+  cacto2 = loadImage("obstacle2.png")
+  cacto3 = loadImage("obstacle3.png")
+  cacto4 = loadImage("obstacle4.png")
+  cacto5 = loadImage("obstacle5.png")
+  cacto6 = loadImage("obstacle6.png")
 }
-
 
 
 function setup(){
@@ -32,33 +35,45 @@ function setup(){
   //crie um sprite de trex
   trex = createSprite(50,160,20,50);
   trex.addAnimation("running", trex_running);
-trex.scale = 0.5
+  trex.scale = 0.5
 
-ground = createSprite(0,180,600,15);
-ground.addImage("solo",groundImage );
-invisibleGround = createSprite(0,190,600,15);
-invisibleGround.visible = false; 
+  ground = createSprite(0,180,600,15);
+  ground.addImage("solo",groundImage );
+  invisibleGround = createSprite(0,190,600,15);
+  invisibleGround.visible = false; 
 
-
+  grupoCacto = new Group();
+  grupoNuvem = new Group();
 }
 
 function draw(){
-  background("white")
+  background("white");
  
- ground.velocityX = -2;
- if (ground.x < 0){
-   ground.x = 300;
- }
- 
- if (keyDown("space") && trex.y >= 150){
-   trex.velocityY = -13;
- }
- trex.velocityY = trex.velocityY + 0.8;
 
- trex.collide (invisibleGround);  
+  if (estadoDoJogo === PLAY) {
+    ground.velocityX = -2;
 
-criarNuvem();
-criarCacto();
+    // faz o chão não sumir
+    if (ground.x < 0){
+      ground.x = 300;
+    }
+
+    if (keyDown("space") && trex.y >= 150){
+      trex.velocityY = -13;
+    }
+
+    // efeito da gravidade
+    trex.velocityY = trex.velocityY + 0.8;
+
+    trex.collide (invisibleGround); 
+
+    criarNuvem();
+    criarCacto();
+
+  } else if (estadoDoJogo === END) {
+
+  }
+
   drawSprites();
 
 }
@@ -75,36 +90,34 @@ function criarNuvem(){
 
     trex.depth = nuvem.depth;   
     trex.depth = trex.depth + 1;
-  nuvem.lifetime=350
+    nuvem.lifetime=350
+    grupoNuvem.add(nuvem);
   }
-
 
 }
 function criarCacto(){
   if(frameCount % 120 === 0){
-cacto=createSprite(650,170,50,50)
-cacto.scale=0.5
-cacto.velocityX = -4 
-var rand = Math.round(random(1,6));
-switch(rand){
-  case 1: cacto.addImage(cacto1)
-   break;
-   case 2: cacto.addImage(cacto2)
-   break;
-   case 3: cacto.addImage(cacto3)
-   break;
-   case 4: cacto.addImage(cacto4)
-   break;
-   case 5: cacto.addImage(cacto5)
-   break;
-   case 6: cacto.addImage(cacto6)
-   break;
-   default: break;
+    cacto=createSprite(650,170,50,50)
+    cacto.scale=0.5
+    cacto.velocityX = -4 
+    var rand = Math.round(random(1,6));
+    switch(rand){
+      case 1: cacto.addImage(cacto1)
+      break;
+      case 2: cacto.addImage(cacto2)
+      break;
+      case 3: cacto.addImage(cacto3)
+      break;
+      case 4: cacto.addImage(cacto4)
+      break;
+      case 5: cacto.addImage(cacto5)
+      break;
+      case 6: cacto.addImage(cacto6)
+      break;
+      default: break;
+    }
+    cacto.lifetime=200;
+    grupoCacto.add(cacto);
+  }
+
 }
-cacto.lifetime=200
-
-
-}
-}
-
-
